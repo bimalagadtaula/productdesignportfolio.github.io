@@ -11,6 +11,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --muted: color-mix(in oklab, canvasText 40%, transparent);
 }
 
 a {
@@ -92,6 +94,31 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+html, body, #root {
+  min-height: 100%;
+}
+
+main a, nav a, .arrow-link, .highlight-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in oklab, canvasText 20%, transparent);
+}
+
+main a:hover, nav a:hover, .arrow-link:hover, .highlight-link:hover {
+  border-bottom-color: currentColor;
+}
+
+h1, h2, h3 {
+  margin: 0.25rem 0;
+}
+
+ul { padding-left: 1rem; margin: 0.5rem 0; }
+li { margin: 0.25rem 0; }
+
+section + section { border-top: 1px solid color-mix(in oklab, canvasText 10%, transparent); padding-top: 32px; }
+
+/* Subtle entrance effects are handled via framer-motion; base styles only here */
 
 @media (prefers-color-scheme: light) {
   :root {
