@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, type Variants } from 'framer-motion'
 import './App.css'
+import { Nav } from './components/Nav'
+import { Section, sectionContainer, sectionItem } from './components/Section'
+import { Card } from './components/Card'
 
 function useDarkMode(): [boolean, () => void] {
   const [isDark, setIsDark] = useState<boolean>(false)
@@ -51,14 +54,6 @@ const skills = {
   multi: ['Estratégia e Pesquisa', 'Ágil', 'Gestão de Equipes', 'Pesquisa de Usuário'],
 }
 
-function SectionTitle({ children }: { children: string }) {
-  return (
-    <h2 style={{ fontSize: 20, letterSpacing: 1.2, textTransform: 'uppercase', color: 'var(--muted)' }}>
-      {children}
-    </h2>
-  )
-}
-
 function App() {
   const [isDark, toggleDark] = useDarkMode()
   const introRef = useRef<HTMLElement | null>(null)
@@ -74,34 +69,16 @@ function App() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const sections = [
+    { id: 'resumo', label: 'Resumo' },
+    { id: 'skills', label: 'Habilidades' },
+    { id: 'exp', label: 'Experiência' },
+    { id: 'contato', label: 'Contato' },
+  ]
+
   return (
     <div>
-      <motion.nav
-        initial={{ y: -24, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          position: 'sticky',
-          top: 0,
-          backdropFilter: 'saturate(180%) blur(8px)',
-          background: 'color-mix(in oklab, canvas 75%, transparent)',
-          borderBottom: '1px solid color-mix(in oklab, canvasText 10%, transparent)',
-          zIndex: 50,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', maxWidth: 1040, margin: '0 auto' }}>
-          <a href="#home" style={{ fontWeight: 700, letterSpacing: 0.4 }}>Roger C.</a>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <a href="#resumo">Resumo</a>
-            <a href="#skills">Habilidades</a>
-            <a href="#exp">Experiência</a>
-            <a href="#contato">Contato</a>
-            <button onClick={toggleDark} aria-pressed={isDark} style={{ padding: '6px 10px', borderRadius: 8 }}>
-              {isDark ? 'Light' : 'Dark'}
-            </button>
-          </div>
-        </div>
-      </motion.nav>
+      <Nav items={sections} onToggleTheme={toggleDark} isDark={isDark} />
 
       <header id="home" className="intro" ref={introRef}>
         <motion.div variants={container} initial="hidden" animate="show">
@@ -120,22 +97,25 @@ function App() {
       </header>
 
       <main style={{ maxWidth: 1040, margin: '0 auto', padding: '24px 16px' }}>
-        <section id="resumo" style={{ marginTop: 40 }}>
-          <SectionTitle>Resumo</SectionTitle>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }}>
-            <motion.p variants={item} style={{ marginTop: 12, lineHeight: 1.7, opacity: 0.9 }}>
+        <Section id="resumo" title="Resumo">
+          <motion.div variants={sectionContainer}>
+            <motion.p variants={sectionItem} style={{ marginTop: 12, lineHeight: 1.7, opacity: 0.9 }}>
               Atualmente, atuo como UX Designer e Researcher focado em Inovação, desenvolvendo pesquisas e projetos com design estratégico e lean inception, centrado no usuário e suas interações com interfaces digitais e novos canais de consumo.
             </motion.p>
-            <motion.p variants={item} style={{ marginTop: 12, lineHeight: 1.7, opacity: 0.9 }}>
+            <motion.p variants={sectionItem} style={{ marginTop: 12, lineHeight: 1.7, opacity: 0.9 }}>
               Com mais de 14 anos de experiência, atuei em projetos para grandes empresas do varejo brasileiro e latino-americano, desenvolvendo soluções para internacionalização de marcas, relacionamento com o consumidor e qualificação de processos B2B.
             </motion.p>
+            <motion.div variants={sectionItem} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginTop: 16 }}>
+              <Card title="CV" href="/resume.pdf" />
+              <Card title="Portfolio" href="/portfolio.pdf" />
+              <Card title="LinkedIn" href="https://linkedin.com/in/rogercamara" />
+            </motion.div>
           </motion.div>
-        </section>
+        </Section>
 
-        <section id="skills" style={{ marginTop: 56 }}>
-          <SectionTitle>Habilidades</SectionTitle>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginTop: 16 }}>
-            <motion.div variants={item}>
+        <Section id="skills" title="Habilidades">
+          <motion.div variants={sectionContainer} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
+            <motion.div variants={sectionItem}>
               <h3>Design</h3>
               <ul>
                 {skills.design.map((s) => (
@@ -143,7 +123,7 @@ function App() {
                 ))}
               </ul>
             </motion.div>
-            <motion.div variants={item}>
+            <motion.div variants={sectionItem}>
               <h3>Ferramentas</h3>
               <ul>
                 {skills.tools.map((s) => (
@@ -151,7 +131,7 @@ function App() {
                 ))}
               </ul>
             </motion.div>
-            <motion.div variants={item}>
+            <motion.div variants={sectionItem}>
               <h3>Front-end</h3>
               <ul>
                 {skills.frontend.map((s) => (
@@ -159,7 +139,7 @@ function App() {
                 ))}
               </ul>
             </motion.div>
-            <motion.div variants={item}>
+            <motion.div variants={sectionItem}>
               <h3>Multidisciplinar</h3>
               <ul>
                 {skills.multi.map((s) => (
@@ -168,27 +148,28 @@ function App() {
               </ul>
             </motion.div>
           </motion.div>
-        </section>
+        </Section>
 
-        <section id="exp" style={{ marginTop: 56 }}>
-          <SectionTitle>Experiência</SectionTitle>
-          <motion.div variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-80px' }} style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+        <Section id="exp" title="Experiência">
+          <motion.div variants={sectionContainer} style={{ display: 'grid', gap: 16 }}>
             {experiences.map((job) => (
-              <motion.article key={job.company + job.time} variants={item} style={{ border: '1px solid color-mix(in oklab, canvasText 12%, transparent)', borderRadius: 12, padding: 16 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                  <a href="#" style={{ fontWeight: 600 }}>{job.company}</a>
-                  <div style={{ opacity: 0.7 }}>{job.time}</div>
-                </div>
-                <p style={{ marginTop: 8 }}>{job.position}</p>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-                  {job.used.map((t) => (
-                    <span key={t} style={{ border: '1px solid color-mix(in oklab, canvasText 12%, transparent)', padding: '4px 8px', borderRadius: 999 }}>{t}</span>
-                  ))}
-                </div>
-              </motion.article>
+              <motion.div key={job.company + job.time} variants={sectionItem}>
+                <Card>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                    <a href="#" style={{ fontWeight: 600 }}>{job.company}</a>
+                    <div style={{ opacity: 0.7 }}>{job.time}</div>
+                  </div>
+                  <p style={{ marginTop: 8 }}>{job.position}</p>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+                    {job.used.map((t) => (
+                      <span key={t} style={{ border: '1px solid color-mix(in oklab, canvasText 12%, transparent)', padding: '4px 8px', borderRadius: 999 }}>{t}</span>
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
             ))}
           </motion.div>
-        </section>
+        </Section>
       </main>
 
       <motion.footer id="contato" className="footer" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} style={{ padding: '32px 16px', textAlign: 'center' }}>
